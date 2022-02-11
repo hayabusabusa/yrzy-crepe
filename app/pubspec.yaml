@@ -35,6 +35,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
+  # Local packages
+  # core module
+  crepe_core:
+    path: ../packages/crepe_core
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
