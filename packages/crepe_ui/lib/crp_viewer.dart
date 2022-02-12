@@ -4,10 +4,12 @@ import 'package:crepe_ui/crp_network_image.dart';
 
 class CRPViewer extends StatelessWidget {
   final List<String> imageURLs;
+  final PageController? controller;
 
   const CRPViewer({
     required this.imageURLs,
-    Key? key 
+    Key? key,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -18,6 +20,7 @@ class CRPViewer extends StatelessWidget {
         return CRPNetworkImage(imageURL: imageURLs[index]);
       },
       reverse: true,
+      controller: controller,
     );
   }
 }
