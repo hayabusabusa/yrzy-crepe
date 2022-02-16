@@ -32,14 +32,14 @@ class CRPBookCollectionReference implements CRPCollectionReferencable<Book> {
   }
 }
 
-class CRPBookPaginationQuery implements CRPQueryReferencable<Book> {
+class CRPBookPaginationQueryReference implements CRPQueryReferencable<Book> {
   final String collection;
   final String orderBy;
   final bool isDescending;
   final List<Object?> startValues;
   final int limit;
 
-  CRPBookPaginationQuery({
+  CRPBookPaginationQueryReference({
     required this.collection,
     required this.orderBy,
     required this.isDescending,
