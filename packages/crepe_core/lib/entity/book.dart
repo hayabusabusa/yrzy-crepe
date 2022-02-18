@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 /// 作品を表すクラス.
 class Book {
   /// Firestore で割り振られているデータの ID.
@@ -27,4 +29,44 @@ class Book {
     this.author,
     this.thumbnailURL
   });
+
+  factory Book.fromData({
+    required String id,
+    required Map<String, dynamic> data,
+  }) {
+    final imageURLs = (data["imageURLs"] as List<dynamic>).map((e) => e as String).toList();
+    final categories = (data["categories"] as List<dynamic>).map((e) => e as String).toList();
+    return Book(
+      id: id, 
+      title: data["title"], 
+      url: data["url"], 
+      createdAt: (data["createdAt"] as Timestamp).toDate(), 
+      imageURLs: imageURLs, 
+      categories: categories,
+      author: data["author"],
+      thumbnailURL: data["thumbnailURL"],
+    );
+  }
+
+  Map<String, dynamic> toData() {
+    final data =  {
+      "title": title,
+      "url": url,
+      "createdAt": createdAt,
+      "imageURLs": imageURLs,
+      "categories": categories,
+    };
+
+    final author = this.author;
+    if (author != null) {
+      data["author"] = author;
+    }
+
+    final thumbnailURL = this.thumbnailURL;
+    if (thumbnailURL != null) {
+      data["thumbnailURL"] = thumbnailURL;
+    }
+
+    return data;
+  }
 }

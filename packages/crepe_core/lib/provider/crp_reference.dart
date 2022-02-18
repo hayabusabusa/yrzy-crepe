@@ -11,22 +11,20 @@ class CRPBookCollectionReference implements CRPCollectionReferencable<Book> {
   });
 
   @override
-  Book fromFirestore(Map<String, dynamic> data) {
-    // TODO: implement fromFirestore
-    throw UnimplementedError();
+  Book fromFirestore(String id, Map<String, dynamic> data) {
+    return Book.fromData(id: id, data: data);
   }
 
   @override
   Map<String, dynamic> toFirestore(Book document) {
-    // TODO: implement toFirestore
-    throw UnimplementedError();
+    return document.toData();
   }
 
   @override
   CollectionReference<Book> toReference(FirebaseFirestore db) {
     return db.collection(collection)
       .withConverter(
-        fromFirestore: (snapshot, _) => fromFirestore(snapshot.data()!), 
+        fromFirestore: (snapshot, _) => fromFirestore(snapshot.id, snapshot.data()!), 
         toFirestore: (document, _) => toFirestore(document),
       );
   }
@@ -48,15 +46,13 @@ class CRPBookPaginationQueryReference implements CRPQueryReferencable<Book> {
   });
 
   @override
-  Book fromFirestore(Map<String, dynamic> data) {
-    // TODO: implement fromFirestore
-    throw UnimplementedError();
+  Book fromFirestore(String id, Map<String, dynamic> data) {
+    return Book.fromData(id: id, data: data);
   }
 
   @override
   Map<String, dynamic> toFirestore(Book document) {
-    // TODO: implement toFirestore
-    throw UnimplementedError();
+    return document.toData();
   }
 
   @override
@@ -66,7 +62,7 @@ class CRPBookPaginationQueryReference implements CRPQueryReferencable<Book> {
       .startAt(startValues)
       .limit(limit)
       .withConverter<Book>(
-        fromFirestore: (snapshot, _) => fromFirestore(snapshot.data()!), 
+        fromFirestore: (snapshot, _) => fromFirestore(snapshot.id, snapshot.data()!), 
         toFirestore: (document, _) => toFirestore(document),
       );
   }
