@@ -23,6 +23,10 @@ class CRPAuthProvider {
     return _auth.currentUser != null;
   }
 
+  String? uid() {
+    return _auth.currentUser?.uid;
+  }
+
   Future<void> signInAsAnonymousUser() {
     return _auth.signInAnonymously();
   }
