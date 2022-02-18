@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:crepe_core/provider/crp_referencable.dart';
+import 'package:crepe_core/provider/crp_collection_refrencable.dart';
+import 'package:crepe_core/provider/crp_query_referencable.dart';
 
 class CRPFirestoreProvider {
 

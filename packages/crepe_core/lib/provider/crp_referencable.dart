@@ -6,6 +6,15 @@ abstract class CRPReferencable<T, U> {
   U toReference(FirebaseFirestore db);
 }
 
-abstract class CRPQueryReferencable<T> extends CRPReferencable<T, Query<T>> {}
+enum CRPCollection {
+  book,
+}
 
-abstract class CRPCollectionReferencable<T> extends CRPReferencable<T, CollectionReference<T>> {}
+extension CRPCollectionExtension on CRPCollection {
+  String get rawValue {
+    switch (this) {
+      case CRPCollection.book:
+        return "public/v1/books";
+    }
+  }
+}
