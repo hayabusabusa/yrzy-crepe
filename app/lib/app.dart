@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:crepe_ui/crepe_ui.dart';
+
 class App extends StatelessWidget {
   const App({ Key? key }) : super(key: key);
 
@@ -7,9 +9,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: CRPTheme.light,
+      darkTheme: CRPTheme.dark,
+      themeMode: ThemeMode.system,
       home: const Scaffold(
         body: Center(
           child: Text("app"),
