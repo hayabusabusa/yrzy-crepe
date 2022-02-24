@@ -34,11 +34,28 @@ class _BodyState extends State<_Body> {
   bool _isLoadingNextPage = false;
   DateTime? _lastCreatedAtDate;
 
-  ScrollController? _controller;
+  final ScrollController _controller = ScrollController();
 
   @override
   void initState() {
     super.initState();
+
+    _controller.addListener(() { 
+      final maxScrollExtent = _controller.position.maxScrollExtent;
+      final position = _controller.position.pixels;
+      final lastCreatedAtDate = _lastCreatedAtDate;
+
+      if (lastCreatedAtDate != null) {
+        // `スクロール領域 - 現在のスクロール位置` で残りのスクロール可能領域を計算する.
+        // 慣性スクロール分を無視するため 0 <= 残りのスクロール領域 <= 40 になったら次のページを取得する.
+        final diff = maxScrollExtent - position;
+        final isReachBottom = 0 <= diff && diff <= 40;
+        if (isReachBottom && !_isLoadingNextPage) {
+          _isLoadingNextPage = true;
+          _fetchBooks(startDateTime: lastCreatedAtDate);
+        }
+      }
+    });
 
     // NOTE: サインインしていない場合は、サインインの処理をしてからデータの取得を行う.
     if (!CRPAuthProvider.instance.isSignIn()) {
@@ -53,28 +70,8 @@ class _BodyState extends State<_Body> {
   }
 
   @override
-  void didChangeDependencies() {
-    _controller = PrimaryScrollController.of(context);
-    _controller?.addListener(() { 
-      final maxScrollExtent = _controller?.position.maxScrollExtent;
-      final position = _controller?.position.pixels;
-      final lastCreatedAtDate = _lastCreatedAtDate;
-
-      if (maxScrollExtent != null && position != null && lastCreatedAtDate != null) {
-        final diff = maxScrollExtent - position;
-        final isReachBottom = diff <= 80;
-        if (isReachBottom && !_isLoadingNextPage) {
-          _isLoadingNextPage = true;
-          _fetchBooks(startDateTime: lastCreatedAtDate);
-        }
-      }
-    });
-    super.didChangeDependencies();
-  }
-
-  @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -87,6 +84,7 @@ class _BodyState extends State<_Body> {
             child: CircularProgressIndicator()
           )
         : Scrollbar(
+          controller: _controller,
           child: RefreshIndicator(
             onRefresh: () async {
               _refresh();
@@ -124,9 +122,6 @@ class _BodyState extends State<_Body> {
   }
 
   void _refresh() async {
-    // NOTE: リロードすると `ListView` が新しくなるので、ここで `ScrollController` からの参照をリセットする必要がある.
-    _controller?.dispose();
-
     setState(() {
       _isLoading = true;
       _books.clear();
@@ -174,6 +169,10 @@ class _ListTile extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          Container(
+            height: 1,
+            color: Theme.of(context).dividerColor,
           ),
         ],
       ),
