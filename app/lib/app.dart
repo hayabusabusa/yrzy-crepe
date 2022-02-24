@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:crepe_ui/crepe_ui.dart';
 
+import 'package:crepe/screens/screens.dart';
+
 class App extends StatelessWidget {
   const App({ Key? key }) : super(key: key);
 
@@ -12,11 +14,7 @@ class App extends StatelessWidget {
       theme: CRPTheme.light,
       darkTheme: CRPTheme.dark,
       themeMode: ThemeMode.system,
-      home: const Scaffold(
-        body: Center(
-          child: Text("app"),
-        ),
-      ),
+      home: const BooksScreen(),
     );
   }
 }
