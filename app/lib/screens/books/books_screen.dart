@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:crepe_core/crepe_core.dart';
 import 'package:crepe_ui/crepe_ui.dart';
 
+import 'package:crepe/app_router.dart';
+
 // MARK: - Screen
 
 class BooksScreen extends StatelessWidget {
@@ -94,7 +96,13 @@ class _BodyState extends State<_Body> {
                 controller: _controller,
                 itemBuilder: (_, index) {
                   final book = _books[index];
-                  return _ListTile(book: book);
+                  return _ListTile(
+                    book: book,
+                    onTap: () {
+                      final args = ViewerScreenArgs(book: book);
+                      Navigator.of(context).pushNamed(AppRouter.viewer, arguments: args);
+                    },
+                  );
                 },
               ),
           ),
@@ -135,16 +143,18 @@ class _BodyState extends State<_Body> {
 
 class _ListTile extends StatelessWidget {
   final Book book;
+  final void Function() onTap;
 
   const _ListTile({
     Key? key,
     required this.book,
+    required this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
