@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:crepe_ui/crepe_ui.dart';
 
-import 'package:crepe/screens/screens.dart';
+import 'package:crepe/app_router.dart';
 
 class App extends StatelessWidget {
   const App({ Key? key }) : super(key: key);
@@ -14,7 +14,8 @@ class App extends StatelessWidget {
       theme: CRPTheme.light,
       darkTheme: CRPTheme.dark,
       themeMode: ThemeMode.system,
-      home: const BooksScreen(),
+      initialRoute: AppRouter.home,
+      onGenerateRoute: (settings) => AppRouter.generateRoute(settings),
     );
   }
 }
