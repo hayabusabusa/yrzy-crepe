@@ -49,9 +49,9 @@ class _BodyState extends State<_Body> {
 
       if (lastCreatedAtDate != null) {
         // `スクロール領域 - 現在のスクロール位置` で残りのスクロール可能領域を計算する.
-        // 慣性スクロール分を無視するため 0 <= 残りのスクロール領域 <= 40 になったら次のページを取得する.
+        // 慣性スクロール分を無視するため 0 <= 残りのスクロール領域 <= 220 になったら次のページを取得する.
         final diff = maxScrollExtent - position;
-        final isReachBottom = 0 <= diff && diff <= 40;
+        final isReachBottom = 0 <= diff && diff <= 220;
         if (isReachBottom && !_isLoadingNextPage) {
           _isLoadingNextPage = true;
           _fetchBooks(startDateTime: lastCreatedAtDate);
