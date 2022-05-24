@@ -9,6 +9,14 @@ class CRPTheme {
 
   CRPTheme._();
 
+  /// スライダーのテーマ.
+  static final _sliderTheme = SliderThemeData.fromPrimaryColors(
+    primaryColor: _lightModePrimaryColor, 
+    primaryColorDark: _darkModePrimaryColor, 
+    primaryColorLight: _lightModePrimaryColor, 
+    valueIndicatorTextStyle: const TextStyle(color: Colors.white),
+  );
+
   /// アプリのライトモードのテーマ
   static final light = ThemeData.light().copyWith(
     // メインカラー
@@ -42,7 +50,8 @@ class CRPTheme {
     // テキストボタンのテーマ
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(primary: _lightModePrimaryColor),
-    )
+    ),
+    sliderTheme: _sliderTheme,
   );
 
   /// アプリのダークモードのテーマ
@@ -66,6 +75,7 @@ class CRPTheme {
     // テキストボタンのテーマ
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(primary: _darkModePrimaryColor),
-    )
+    ),
+    sliderTheme: _sliderTheme,
   );
 }
