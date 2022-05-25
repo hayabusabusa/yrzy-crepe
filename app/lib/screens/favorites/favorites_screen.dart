@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:crepe_core/crepe_core.dart';
 import 'package:crepe_ui/crepe_ui.dart';
 
+import 'package:crepe/app_router.dart';
+
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({ Key? key }) : super(key: key);
 
@@ -62,7 +64,23 @@ class _BodyState extends State<_Body> {
           itemBuilder: (_, index) {
             return _ListTile(
               book: _books[index], 
-              onTap: () {},
+              onTap: () async {
+                final favoriteBook = _books[index];
+                final documentReferencable = CRPBooksDocumentReferencable(documentID: favoriteBook.id);
+                
+                try {
+                  final snapshot = await CRPFirestoreProvider.instance.getDocument(documentReferencable: documentReferencable);
+                  final book = snapshot.data();
+                  if (book == null) {
+                    return;
+                  }
+
+                  final args = ViewerScreenArgs(book: book);
+                  Navigator.of(context).pushNamed(AppRouter.viewer, arguments: args);
+                } catch(_) {
+                  // 現状は何もしない.
+                }
+              },
             );
           },
         )
