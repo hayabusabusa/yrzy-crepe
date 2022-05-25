@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:crepe_core/crepe_core.dart';
+import 'package:crepe_ui/crepe_ui.dart';
+
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({ Key? key }) : super(key: key);
 
@@ -24,10 +27,77 @@ class _Body extends StatefulWidget {
 }
 
 class _BodyState extends State<_Body> {
+  bool _isLoading = true;
+  List<FavoriteBook> _books = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    final uid = CRPAuthProvider.instance.uid();
+    if (uid == null) {
+      return;
+    }
+
+    final collectionReferencable = CRPFavoritesCollectionReference(uid: uid);
+    CRPFirestoreProvider.instance.getFromCollection(collectionReferencable: collectionReferencable)
+      .then((value) {
+        setState(() {
+          _books = value.docs.map((e) => e.data()).toList();
+          _isLoading = false;
+        });
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    return AnimatedSwitcher(
+      duration: const Duration(microseconds: 200),
+      child: _isLoading 
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : ListView.builder(
+          itemCount: _books.length,
+          itemBuilder: (_, index) {
+            return _ListTile(
+              book: _books[index], 
+              onTap: () {},
+            );
+          },
+        )
+    );
+  }
+}
+
+// MARK: - List tile
+
+class _ListTile extends StatelessWidget {
+  final FavoriteBook book;
+  final VoidCallback onTap;
+
+  const _ListTile({ 
+    Key? key,
+    required this.book,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: CRPNetworkImage(
+        imageURL: book.thumbnailURL ?? "",
+        width: 80,
+        height: 80,
+        fit: BoxFit.cover,
+      ),
+      subtitle: Text(
+        book.title,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+      ),
+      trailing: const Icon(Icons.chevron_right_rounded),
+      onTap: onTap,
     );
   }
 }
