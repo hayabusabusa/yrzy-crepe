@@ -1,10 +1,10 @@
 
 /// お気に入りに追加した作品を表すクラス.
 class FavoriteBook {
-  /// Firestore で割り当てられるデータの ID.
+  /// Firestore のデータに割り振られている ID.
+  /// 
+  /// 作品の ID と同じ ID を割り振る.
   final String id;
-  /// 作品の ID.
-  final String bookID;
   /// 作品のタイトル.
   final String title;
   /// 作品のサムネイル画像の URL.
@@ -12,7 +12,6 @@ class FavoriteBook {
 
   FavoriteBook({
     required this.id,
-    required this.bookID,
     required this.title,
     required this.thumbnailURL,
   });
@@ -23,7 +22,6 @@ class FavoriteBook {
   }) {
     return FavoriteBook(
       id: id, 
-      bookID: data["bookID"], 
       title: data["title"], 
       thumbnailURL: data["thumbnailURL"],
     );
@@ -31,7 +29,6 @@ class FavoriteBook {
 
   Map<String, dynamic> toData() {
     final data = {
-      "bookID": bookID,
       "title": title,
     };
 
