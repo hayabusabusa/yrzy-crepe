@@ -250,7 +250,8 @@ class _FavoriteButtonState extends State<_FavoriteButton> {
             onPressed: () async {
               final favoriteBook = FavoriteBook(
                 id: widget.book.id, 
-                title: widget.book.title, 
+                title: widget.book.title,
+                createdAt: widget.book.createdAt,
                 thumbnailURL: widget.book.thumbnailURL,
               );
               
