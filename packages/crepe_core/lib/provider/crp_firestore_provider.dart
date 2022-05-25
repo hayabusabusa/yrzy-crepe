@@ -28,6 +28,13 @@ class CRPFirestoreProvider {
     return collectionReferencable.toReference(_db).get();
   }
 
+  Future<DocumentReference<T>> addDocument<T>({
+    required T data,
+    required CRPCollectionReferencable<T> collectionReferencable,
+  }) {
+    return collectionReferencable.toReference(_db).add(data);
+  }
+
   Future<QuerySnapshot<T>> getWithQuery<T>({
     required CRPQueryReferencable<T> queryReferencable,
   }) {
