@@ -8,6 +8,7 @@ abstract class CRPReferencable<T, U> {
 
 enum CRPCollection {
   book,
+  users,
 }
 
 extension CRPCollectionExtension on CRPCollection {
@@ -15,6 +16,8 @@ extension CRPCollectionExtension on CRPCollection {
     switch (this) {
       case CRPCollection.book:
         return "public/v1/books";
+      case CRPCollection.users:
+        return "public/v1/users";
     }
   }
 }
