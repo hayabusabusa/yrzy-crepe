@@ -54,7 +54,7 @@ class _BodyState extends State<_Body> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: const Duration(microseconds: 200),
+      duration: const Duration(milliseconds: 200),
       child: _isLoading 
         ? const Center(
             child: CircularProgressIndicator(),

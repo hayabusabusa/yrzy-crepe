@@ -35,7 +35,7 @@ class CRPTheme {
       // AppBar のタイトルのフォント設定
       titleTextStyle: TextStyle(
         color: Colors.grey.shade800,
-        fontSize: 17,
+        fontSize: 16,
         fontWeight: FontWeight.w600,
       ),
       // AppBar のアイコンの色
@@ -68,7 +68,7 @@ class CRPTheme {
       color: Color.fromRGBO(48, 48, 48, 1.0),
       // AppBar のタイトルのフォント設定
       titleTextStyle: TextStyle(
-        fontSize: 17,
+        fontSize: 16,
         fontWeight: FontWeight.w600,
       ),
     ),
