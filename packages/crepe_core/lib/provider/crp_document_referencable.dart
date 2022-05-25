@@ -5,6 +5,7 @@ import 'package:crepe_core/provider/crp_referencable.dart';
 
 abstract class CRPDocumentReferencable<T> extends CRPReferencable<T, DocumentReference<T>> {}
 
+/// `/books/{documentID}` のドキュメントにアクセスするリファレンス.
 class CRPBooksDocumentReferencable extends CRPDocumentReferencable<Book> {
   final String documentID;
 
@@ -26,6 +27,35 @@ class CRPBooksDocumentReferencable extends CRPDocumentReferencable<Book> {
   DocumentReference<Book> toReference(FirebaseFirestore db) {
     return db.collection(CRPCollection.book.rawValue)
       .doc(documentID)
+      .withConverter(
+        fromFirestore: (snapshot, _) => fromFirestore(snapshot.id, snapshot.data()!), 
+        toFirestore: (document, _) => toFirestore(document),
+      );
+  }
+}
+
+/// `/users/{uid}` のドキュメントにアクセスするリファレンス.
+class CRPUsersDocumentReferencable extends CRPDocumentReferencable<User> {
+  final String uid;
+
+  CRPUsersDocumentReferencable({
+    required this.uid,
+  });
+
+  @override
+  User fromFirestore(String id, Map<String, dynamic> data) {
+    return User.fromData(id: id, data: data);
+  }
+
+  @override
+  Map<String, dynamic> toFirestore(User document) {
+    return document.toData();
+  }
+
+  @override
+  DocumentReference<User> toReference(FirebaseFirestore db) {
+    return db.collection(CRPCollection.users.rawValue)
+      .doc(uid)
       .withConverter(
         fromFirestore: (snapshot, _) => fromFirestore(snapshot.id, snapshot.data()!), 
         toFirestore: (document, _) => toFirestore(document),
