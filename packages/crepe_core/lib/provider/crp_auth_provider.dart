@@ -27,7 +27,7 @@ class CRPAuthProvider {
     return _auth.currentUser?.uid;
   }
 
-  Future<void> signInAsAnonymousUser() {
+  Future<UserCredential> signInAsAnonymousUser() {
     return _auth.signInAnonymously();
   }
 }

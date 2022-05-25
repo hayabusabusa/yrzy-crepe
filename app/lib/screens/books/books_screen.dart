@@ -70,10 +70,19 @@ class _BodyState extends State<_Body> {
       }
     });
 
-    // NOTE: サインインしていない場合は、サインインの処理をしてからデータの取得を行う.
+    // サインインしていない場合は、サインインの処理をしてからデータの取得を行う.
     if (!CRPAuthProvider.instance.isSignIn()) {
       CRPAuthProvider.instance.signInAsAnonymousUser()
-        .then((value) {
+        .then((value) async {
+          // サインイン後の UID を利用してユーザーのデータを Firestore につくる.
+          final uid = value.user?.uid;
+          if (uid != null) {
+            final user = User(id: uid, createdAt: DateTime.now());
+            final documentReferencable = CRPUsersDocumentReferencable(uid: uid);
+
+            await CRPFirestoreProvider.instance.setDocument(data: user, documentReferencable: documentReferencable);
+          }
+
           _fetchBooks(startDateTime: DateTime.now());
         });
       return;
