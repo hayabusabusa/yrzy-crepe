@@ -6,6 +6,7 @@ import 'package:crepe/screens/screens.dart';
 
 class AppRouter {
   static const String home = "/";
+  static const String favorites = "/favorites";
   static const String viewer = "/viewer";
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -13,6 +14,10 @@ class AppRouter {
       case home:
         return MaterialPageRoute(
           builder: (_) => const BooksScreen(),
+        );
+      case favorites:
+        return MaterialPageRoute(
+          builder: (_) => const FavoritesScreen(),
         );
       case viewer:
         final args = settings.arguments as ViewerScreenArgs;

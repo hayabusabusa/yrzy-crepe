@@ -15,6 +15,17 @@ class BooksScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("本一覧"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRouter.favorites);
+            }, 
+            child: const Text(
+              "お気に入り",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )
+          ),
+        ],
       ),
       body: const _Body(),
     );
