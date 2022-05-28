@@ -52,4 +52,4 @@ jobs:
           flutter pub get
 
       - name: Build ipa file
-        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --build-number ${GITHUB_RUN_NUMBER}
+        run: flutter build ipa --release --export-options-plist=app/ios/ExportOptions.plist --build-number ${GITHUB_RUN_NUMBER}
