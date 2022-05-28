@@ -48,6 +48,11 @@ jobs:
 
       - name: Install dependency packages
         run: | 
+          cd packages/crepe_core
+          flutter pub get
+          cd ..
+          cd crepe_ui
+          cd ../..
           cd app
           flutter pub get
 
