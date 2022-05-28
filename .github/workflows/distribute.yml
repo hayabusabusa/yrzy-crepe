@@ -29,13 +29,10 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Move app directory
-        run: cd app
-
       - name: Set up GoogleService-info.plist
         run: |
           echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 }}" > GoogleService-Info.plist.txt
-          base64 --decode GoogleService-Info.plist.txt > ios/Runner/GoogleService-Info.plist
+          base64 --decode GoogleService-Info.plist.txt > app/ios/Runner/GoogleService-Info.plist
 
       - name: Set up provisioning profile
         run: |
@@ -51,6 +48,7 @@ jobs:
 
       - name: Install dependency packages
         run: | 
+          cd app
           flutter pub get
 
       - name: Build ipa file
