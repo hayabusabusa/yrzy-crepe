@@ -60,3 +60,9 @@ jobs:
         run: | 
           cd app
           flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --build-number ${GITHUB_RUN_NUMBER}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ios
+          path: build/ios/ipa/Crepe.ipa
