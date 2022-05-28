@@ -1,0 +1,57 @@
+name: Distribute
+
+on:
+  push:
+    branches: [ main ]
+    
+jobs:
+
+  # Build ios app.
+  build_ios:
+    runs-on: macos-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Cache Pods
+        uses: actions/cache@v2
+        with:
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Set up flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Move app directory
+        run: cd app
+
+      - name: Set up GoogleService-info.plist
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 }}" > GoogleService-Info.plist.txt
+          base64 --decode GoogleService-Info.plist.txt > ios/Runner/GoogleService-Info.plist
+
+      - name: Set up provisioning profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}" > release.mobileprovision.txt
+          base64 --decode release.mobileprovision.txt > ~/Library/MobileDevice/Provisioning\ Profiles/CREPE_iOS_Release.mobileprovision
+
+      - name: Set up release certificate
+        uses: Apple-Actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+
+      - name: Install dependency packages
+        run: | 
+          flutter pub get
+
+      - name: Build ipa file
+        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --build-number ${GITHUB_RUN_NUMBER}
