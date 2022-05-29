@@ -227,7 +227,9 @@ class _FavoriteButtonState extends State<_FavoriteButton> {
       future: CRPFirestoreProvider.instance.isExistsDocument(documentReferencable: documentReferencable),
       builder: (_, asyncSnapshot) {
         if (!asyncSnapshot.hasData) {
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         if (asyncSnapshot.hasError) {
