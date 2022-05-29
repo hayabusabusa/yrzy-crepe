@@ -58,6 +58,13 @@ class CRPFirestoreProvider {
     return snapshot.exists;
   }
 
+  /// ドキュメントを削除する.
+  Future<void> removeDocument<T>({
+    required CRPDocumentReferencable<T> documentReferencable,
+  }) {
+    return documentReferencable.toReference(_db).delete();
+  }
+
   /// 任意のコレクションからクエリを利用してドキュメント一覧を取得する。
   Future<QuerySnapshot<T>> getWithQuery<T>({
     required CRPQueryReferencable<T> queryReferencable,
