@@ -59,7 +59,7 @@ jobs:
       - name: Build ipa file
         run: | 
           cd app
-          flutter build ipa --export-options-plist=ios/ExportOptions.plist --build-number ${GITHUB_RUN_NUMBER}
+          flutter build ipa --export-method development --export-options-plist=ios/ExportOptions.plist --build-number ${GITHUB_RUN_NUMBER}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
