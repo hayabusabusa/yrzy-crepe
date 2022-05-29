@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}" > release.mobileprovision.txt
-          base64 --decode release.mobileprovision.txt > ~/Library/MobileDevice/Provisioning\ Profiles/CREPE_iOS_Release.mobileprovision
+          base64 --decode release.mobileprovision.txt > ~/Library/MobileDevice/Provisioning\ Profiles/CREPE_iOS_Development.mobileprovision
 
       - name: Set up release certificate
         uses: Apple-Actions/import-codesign-certs@v1
@@ -59,7 +59,7 @@ jobs:
       - name: Build ipa file
         run: | 
           cd app
-          flutter build ipa --export-method development --build-number ${GITHUB_RUN_NUMBER}
+          flutter build ipa --export-options-plist=ios/ExportOptions.plist --build-number ${GITHUB_RUN_NUMBER}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
