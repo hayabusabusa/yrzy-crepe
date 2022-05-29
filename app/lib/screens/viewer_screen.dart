@@ -240,8 +240,15 @@ class _FavoriteButtonState extends State<_FavoriteButton> {
         final isExists = asyncSnapshot.data ?? false;
         return isExists 
           ? TextButton.icon(
-            onPressed: () { 
-              /* お気に入りから削除の処理を入れる. */
+            onPressed: () async { 
+              try {
+                await CRPFirestoreProvider.instance.removeDocument(documentReferencable: documentReferencable);
+              } catch (_) {
+                // 今のところ何もしない.
+              }
+
+              // ボタンの状態を更新するために、Widget を更新する.
+              setState(() {});
             }, 
             icon: const Icon(Icons.check_rounded),
             label: const Text("お気に入り済み"),
