@@ -29,8 +29,18 @@ class _Body extends StatefulWidget {
 }
 
 class _BodyState extends State<_Body> {
+  /// Firestore から読み込んできたお気に入りの本一覧.
+  List<FavoriteBook> _favoriteBooks = [];
+  /// 初回ロード中かどうかのフラグ.
   bool _isLoading = true;
-  List<FavoriteBook> _books = [];
+  /// ページネーションのロード中かどうかのフラグ.
+  bool _isLoadingNextPage = false;
+  /// ページネーションの最後のページに到達したかどうかのフラグ.
+  bool _isReachLastPage = false;
+  /// ページネーションで利用する、読み込んだお気に入りの本のデータで1番更新日が古い日付.
+  DateTime? _lastCreatedAtDate;
+
+  final ScrollController _controller = ScrollController();
 
   @override
   void initState() {
@@ -41,11 +51,12 @@ class _BodyState extends State<_Body> {
       return;
     }
 
-    final collectionReferencable = CRPFavoritesCollectionReference(uid: uid);
-    CRPFirestoreProvider.instance.getFromCollection(collectionReferencable: collectionReferencable)
+    final queryReferencable = CRPFavoritesPaginationQueryReference(uid: uid, orderBy: "createdAt", isDescending: true, startValues: [DateTime.now()], limit: 20);
+    CRPFirestoreProvider.instance.getWithQuery(queryReferencable: queryReferencable)
       .then((value) {
         setState(() {
-          _books = value.docs.map((e) => e.data()).toList();
+          _favoriteBooks = value.docs.map((e) => e.data()).toList();
+          _lastCreatedAtDate = _favoriteBooks.isEmpty ? null : _favoriteBooks.last.createdAt;
           _isLoading = false;
         });
       });
@@ -59,32 +70,66 @@ class _BodyState extends State<_Body> {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : ListView.builder(
-          itemCount: _books.length,
-          itemBuilder: (_, index) {
-            return _ListTile(
-              book: _books[index], 
-              onTap: () async {
-                final favoriteBook = _books[index];
-                final documentReferencable = CRPBooksDocumentReferencable(documentID: favoriteBook.id);
-                
-                try {
-                  final snapshot = await CRPFirestoreProvider.instance.getDocument(documentReferencable: documentReferencable);
-                  final book = snapshot.data();
-                  if (book == null) {
-                    return;
-                  }
+        : CRPPaginationListView(
+            scrollController: _controller, 
+            itemCount: _favoriteBooks.length, 
+            onReachBottom: () {
+              // 次のページをロード中、もしくは追加で取得する要素がない場合は何もしない.
+              if (_isLoadingNextPage || _isReachLastPage) {
+                return;
+              }
+              _isLoadingNextPage = true;
+              _fetchNextPageAfter(createdAtDate: _lastCreatedAtDate ?? DateTime.now());
+            }, 
+            itemBuilder: (_, index) {
+              return _ListTile(
+                book: _favoriteBooks[index], 
+                onTap: () async {
+                  final favoriteBook = _favoriteBooks[index];
+                  final documentReferencable = CRPBooksDocumentReferencable(documentID: favoriteBook.id);
+                  
+                  try {
+                    final snapshot = await CRPFirestoreProvider.instance.getDocument(documentReferencable: documentReferencable);
+                    final book = snapshot.data();
+                    if (book == null) {
+                      return;
+                    }
 
-                  final args = ViewerScreenArgs(book: book);
-                  Navigator.of(context).pushNamed(AppRouter.viewer, arguments: args);
-                } catch(_) {
-                  // 現状は何もしない.
-                }
-              },
-            );
-          },
-        )
+                    final args = ViewerScreenArgs(book: book);
+                    Navigator.of(context).pushNamed(AppRouter.viewer, arguments: args);
+                  } catch(_) {
+                    // 現状は何もしない.
+                  }
+                },
+              );
+            },
+          )
     );
+  }
+
+  /// 指定された日付以降のページを追加で読み込む
+  void _fetchNextPageAfter({
+    required DateTime createdAtDate,
+  }) async {
+    final uid = CRPAuthProvider.instance.uid();
+    if (uid == null) {
+      return;
+    }
+
+    try {
+      final queryReferencable = CRPFavoritesPaginationQueryReference(uid: uid, orderBy: "createdAt", isDescending: true, startValues: [createdAtDate], limit: 20);
+      final snapshot = await CRPFirestoreProvider.instance.getWithQuery(queryReferencable: queryReferencable);
+      final favoriteBooks = snapshot.docs.map((e) => e.data()).toList();
+
+      setState(() {
+        _favoriteBooks.addAll(favoriteBooks);
+        _lastCreatedAtDate = favoriteBooks.isEmpty ? null : favoriteBooks.last.createdAt;
+        _isReachLastPage = favoriteBooks.isEmpty;
+        _isLoadingNextPage = false;
+      });
+    } catch(error) {
+      debugPrint(error.toString());
+    }
   }
 }
 
