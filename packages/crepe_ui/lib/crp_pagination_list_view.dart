@@ -40,10 +40,13 @@ class _CRPPaginationListViewState extends State<CRPPaginationListView> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return Scrollbar(
       controller: widget.scrollController,
-      itemCount: widget.itemCount,
-      itemBuilder: widget.itemBuilder,
+      child: ListView.builder(
+        controller: widget.scrollController,
+        itemCount: widget.itemCount,
+        itemBuilder: widget.itemBuilder,
+      ),
     );
   }
 
