@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:crepe_core/crepe_core.dart';
 import 'package:crepe_ui/crepe_ui.dart';
@@ -209,7 +210,18 @@ class _Link extends StatelessWidget {
       : Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: TextButton(
-            onPressed: () {}, 
+            onPressed: () async {
+              // URL をクリップボードにコピー
+              final data = ClipboardData(text: url ?? "");
+              await Clipboard.setData(data);
+
+              // SnackBar で通知
+              const snackBar = SnackBar(
+                content: Text("クリップボードにコピーしました"),
+                duration: Duration(seconds: 3),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }, 
             child: Text(
               url ?? "",
               style: const TextStyle(fontSize: 11.0),
