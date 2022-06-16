@@ -82,3 +82,35 @@ class CRPFavoritesPaginationQueryReference implements CRPQueryReferencable<Favor
       );
   }
 }
+
+/// `/book` のドキュメント一覧から任意の作者で検索するリファレンス.
+class CRPSearchBookWithAutherQueryReference implements CRPQueryReferencable<Book> {
+  final String author;
+  final DateTime createdAt;
+
+  CRPSearchBookWithAutherQueryReference({
+    required this.author,
+    required this.createdAt,
+  });
+
+  @override
+  Book fromFirestore(String id, Map<String, dynamic> data) {
+    return Book.fromData(id: id, data: data);
+  }
+
+  @override
+  Map<String, dynamic> toFirestore(Book document) {
+    return document.toData();
+  }
+
+  @override
+  Query<Book> toReference(FirebaseFirestore db) {
+    return db.collection(CRPCollection.book.rawValue)
+      .where("author", isEqualTo: author)
+      .limit(10)
+      .withConverter<Book>(
+        fromFirestore: (snapshot, _) => fromFirestore(snapshot.id, snapshot.data()!), 
+        toFirestore: (document, _) => toFirestore(document),
+      );
+  }
+}
