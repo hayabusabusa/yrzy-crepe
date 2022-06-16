@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:crepe_ui/crepe_ui.dart';
 import 'package:crepe_core/crepe_core.dart';
 
+import 'package:crepe/app_router.dart';
+
 // MARK: - Screen
 
 class ViewerScreen extends StatelessWidget {
@@ -18,6 +20,15 @@ class ViewerScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(book.title),
+        actions: [
+          IconButton(
+            onPressed: () {
+              final args = BookDetailScreenArgs(book: book);
+              Navigator.of(context).pushNamed(AppRouter.bookDetail, arguments: args);
+            }, 
+            icon: const Icon(Icons.info_outline_rounded),
+          )
+        ],
       ),
       body: _Body(book: book),
     );

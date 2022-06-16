@@ -8,6 +8,7 @@ class AppRouter {
   static const String home = "/";
   static const String favorites = "/favorites";
   static const String viewer = "/viewer";
+  static const String bookDetail = "/book_detail";
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -25,6 +26,11 @@ class AppRouter {
           fullscreenDialog: true,
           builder: (_) => ViewerScreen(book: args.book),
         );
+      case bookDetail:
+        final args = settings.arguments as BookDetailScreenArgs;
+        return MaterialPageRoute(
+          builder: (_) => BookDetailScreen(book: args.book,),
+        );
       default:
         throw UnimplementedError('/${settings.name} is not configured');
     }
@@ -35,6 +41,14 @@ class ViewerScreenArgs {
   final Book book;
 
   ViewerScreenArgs({
+    required this.book,
+  });
+}
+
+class BookDetailScreenArgs {
+  final Book book;
+
+  BookDetailScreenArgs({
     required this.book,
   });
 }
