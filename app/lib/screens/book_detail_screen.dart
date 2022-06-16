@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:crepe_core/crepe_core.dart';
 import 'package:crepe_ui/crepe_ui.dart';
 
+import 'package:crepe/app_router.dart';
+
 class BookDetailScreen extends StatelessWidget {
   final Book book;
 
@@ -113,7 +115,9 @@ class _Titles extends StatelessWidget {
             onPressed: author == null 
               ? null 
               : () {
-
+                // 作者で検索を行う
+                final args = SearchBookScreenArgs(author: author ?? "");
+                Navigator.of(context).pushNamed(AppRouter.searchBook, arguments: args);
               }, 
             child: Text(
               author ?? "作者不明",
