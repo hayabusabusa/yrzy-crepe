@@ -107,6 +107,8 @@ class CRPSearchBookWithAutherQueryReference implements CRPQueryReferencable<Book
   Query<Book> toReference(FirebaseFirestore db) {
     return db.collection(CRPCollection.book.rawValue)
       .where("author", isEqualTo: author)
+      .orderBy("createdAt", descending: true)
+      .startAfter([createdAt])
       .limit(10)
       .withConverter<Book>(
         fromFirestore: (snapshot, _) => fromFirestore(snapshot.id, snapshot.data()!), 
