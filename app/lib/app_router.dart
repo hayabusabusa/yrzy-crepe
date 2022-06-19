@@ -35,7 +35,6 @@ class AppRouter {
       case searchBook:
         final args = settings.arguments as SearchBookScreenArgs;
         return MaterialPageRoute(
-          fullscreenDialog: true,
           builder: (_) => SearchBookScreen(author: args.author),
         );
       default:
