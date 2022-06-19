@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:crepe_core/crepe_core.dart';
 import 'package:crepe_ui/crepe_ui.dart';
 
+import 'package:crepe/app_router.dart';
+
 class SearchBookScreen extends StatelessWidget {
   /// ひとまず作者検索のみ.
   final String author;
@@ -76,18 +78,20 @@ class _BodyState extends State<_Body> {
           scrollController: _controller, 
           itemCount: _books.length,
           onReachBottom: () {
-            // TODO: 複合クエリが必要だったのでページネーションをオフにする.
             // 次のページをロード中、もしくは追加で取得する要素がない場合は何もしない.
-            // if (_isLoadingNextPage || _isReachLastPage) {
-            //   return;
-            // }
-            // _isLoadingNextPage = true;
-            // _fetchBooks(dateTime: _lastCreatedAtDate ?? DateTime.now());
+            if (_isLoadingNextPage || _isReachLastPage) {
+              return;
+            }
+            _isLoadingNextPage = true;
+            _fetchBooks(dateTime: _lastCreatedAtDate ?? DateTime.now());
           }, 
           itemBuilder: (_, index) {
             return _ListTile(
               book: _books[index], 
-              onTap: () {},
+              onTap: () {
+                final args = ViewerScreenArgs(book: _books[index]);
+                Navigator.of(context).pushNamed(AppRouter.viewer, arguments: args);
+              },
             );
           },
         )
