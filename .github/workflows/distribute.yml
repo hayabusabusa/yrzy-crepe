@@ -66,3 +66,58 @@ jobs:
         with:
           name: ios
           path: app/build/ios/ipa/Crepe.ipa
+
+  # Build android app.
+  build_android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 8.x
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8.x'
+
+      - name: Set up flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Set up google-service.json
+        run: |
+          cd app/android/app
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" > google-services.json.txt
+          base64 --decode google-services.json.txt > google-services.json
+          cd ../../../
+      
+      - name: Set up keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" > release.jks.txt
+          base64 --decode release.jks.txt > app/release.jks
+
+      - name: Install dependency packages
+        run: | 
+          cd packages/crepe_core
+          flutter pub get
+          cd ..
+          cd crepe_ui
+          cd ../..
+          cd app
+          flutter pub get
+
+      - name: Build apk file
+        run: |
+          export KEYSTORE_PASSWORD='${{ secrets.ANDROID_KEYSTORE_PASSWORD }}'
+          export KEY_ALIAS='${{ secrets.ANDROID_KEY_ALIAS }}'
+          export KEY_PASSWORD='${{ secrets.ANDROID_KEYSTORE_PASSWORD }}'
+          flutter build apk --release --build-number ${GITHUB_RUN_NUMBER}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: android
+          path: build/app/outputs/flutter-apk/app-release.apk
