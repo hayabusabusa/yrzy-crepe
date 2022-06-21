@@ -114,6 +114,7 @@ jobs:
           export KEYSTORE_PASSWORD='${{ secrets.ANDROID_KEYSTORE_PASSWORD }}'
           export KEY_ALIAS='${{ secrets.ANDROID_KEY_ALIAS }}'
           export KEY_PASSWORD='${{ secrets.ANDROID_KEYSTORE_PASSWORD }}'
+          cd app
           flutter build apk --release --build-number ${GITHUB_RUN_NUMBER}
 
       - name: Upload artifact
