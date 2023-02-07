@@ -186,7 +186,7 @@ class _FooterState extends State<_Footer> {
                   flex: 1,
                   child: TextButton(
                     style: TextButton.styleFrom(
-                      primary: Theme.of(context).errorColor,
+                      foregroundColor: Theme.of(context).colorScheme.error,
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();

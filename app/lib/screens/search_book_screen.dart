@@ -159,7 +159,7 @@ class _ListTile extends StatelessWidget {
                 const SizedBox(height: 8.0,),
                 Text(
                   "${book.createdAt.year}-${book.createdAt.month}-${book.createdAt.day}",
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),

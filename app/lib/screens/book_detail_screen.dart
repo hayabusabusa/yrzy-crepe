@@ -151,12 +151,12 @@ class _Label extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 Expanded(
                   child: Text(
                     content ?? "",
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
               ],
@@ -187,7 +187,7 @@ class _Categories extends StatelessWidget {
             return Chip(
               label: Text(
                 category,
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             );
           })

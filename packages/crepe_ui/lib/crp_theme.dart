@@ -49,7 +49,7 @@ class CRPTheme {
     ),
     // テキストボタンのテーマ
     textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(primary: _lightModePrimaryColor),
+      style: TextButton.styleFrom(foregroundColor: _lightModePrimaryColor),
     ),
     sliderTheme: _sliderTheme,
   );
@@ -74,7 +74,7 @@ class CRPTheme {
     ),
     // テキストボタンのテーマ
     textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(primary: _darkModePrimaryColor),
+      style: TextButton.styleFrom(foregroundColor: _darkModePrimaryColor),
     ),
     sliderTheme: _sliderTheme,
   );
